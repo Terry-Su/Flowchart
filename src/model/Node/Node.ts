@@ -1,47 +1,133 @@
-import Rect from "../../../../Draw/src/model/shape/Rect";
-import { notNil, notUndefined } from "../../../../Draw/src/util/lodash/index";
-import FlowChartParticle from '../FlowChartParticle';
-import NodeView from './NodeView/NodeView';
-import { RECT } from '../../constant/type/nodeViewTypes';
-import nodeViewObjectClassMap from "../../constant/map/nodeViewObjectClassMap";
-import { isNil } from 'lodash'
+import Rect from "../../../../Draw/src/model/shape/Rect"
+import { notNil, notUndefined } from "../../../../Draw/src/util/lodash/index"
+import FlowChartParticle from "../FlowChartParticle"
+import { RECT } from "../../constant/type/nodeViewTypes"
+import nodeViewObjectClassMap from "../../constant/map/nodeViewObjectClassMap"
+import { isNil } from "lodash"
+import Segment from "../../../../Draw/src/model/Segment";
 
 export default class Node extends FlowChartParticle {
-  view: Rect = null
+  view: NodeView = null
+
   viewType: string = RECT
-  x: number = 0;
-  y: number = 0;
+
+  x: number = 0
+
+  y: number = 0
+
+  width: number = Node.DEFAULT_WIDTH
+  height: number = Node.DEFAULT_HEIGHT
+
   label: String = "unknown"
 
-  constructor(props) {
+  center: Segment = null
+
+
+  /**
+   * Left border center segment
+   */
+  lbc: Segment = null
+
+  /**
+   * Top border center segment
+   */
+  tbc: Segment = null
+
+  /**
+   * Right border center segment
+   */
+  rbc: Segment = null
+
+  /**
+   * Bottom border center segment
+   */
+  bbc: Segment = null
+
+
+  static DEFAULT_WIDTH: number = 100
+  static DEFAULT_HEIGHT: number = 80
+
+  constructor( props ) {
     super( props )
 
-    this.label = notUndefined(props.label) ? props.label : this.label;
-    this.viewType = notUndefined(props.type) ? props.type : this.viewType;
+    this.x = notUndefined( props.x ) ? props.x : this.x
+    this.y = notUndefined( props.y ) ? props.y : this.y
 
-    this.view = this.createView( { ...props, node: this, draw: this.draw } )
+    this.width = notUndefined( props.width ) ? props.width : this.width
+    this.height = notUndefined( props.height ) ? props.height : this.height
+
+    this.label = notUndefined( props.label ) ? props.label : this.label
+    this.viewType = notUndefined( props.type ) ? props.type : this.viewType
+
+    this.view = this.createView( { node: this, draw: this.draw, fillColor: props.fillColor } )
+
+    this.center = this.createCenter()
+
+    this.lbc = this.createLbc()
+    this.tbc = this.createTbc()
+    this.rbc = this.createRbc()
+    this.bbc = this.createBbc()
     
-    if ( notNil( this.view ) ) {
-      this.translateTo(
-        notNil(props.x) ? props.x : this.x,
-        notNil(props.y) ? props.y : this.y,
-      )
-    }
+    this.mutations.ADD_NODE( this )
+
+    this.translateTo( this.x, this.y )
+  }
+
+  /**
+   * Border center segments
+   */
+  get bcs() {
+    return [
+      this.lbc, this.tbc, this.rbc, this.bbc
+    ]
   }
 
   createView( props: any = {} ): any {
     const ObjectClass: any = nodeViewObjectClassMap[ this.viewType ]
+
     if ( isNil( ObjectClass ) ) {
-      console.log( `Cannot find type: ${ this.viewType }` )
+      console.log( `Cannot find node type: ${this.viewType}` )
       return null
     }
 
     return new ObjectClass( props )
   }
 
-  translateTo(x: number, y: number) {
+  createLinkingSegment( props: any = {}) {
+    return new Segment( { ...props, draw: this.draw, draggable: false, fillColor: 'firebrick' } )
+  }
+
+  createCenter(): Segment {
+    const { x, y } = this
+    return this.createLinkingSegment( { x, y } )
+  }
+
+  createLbc() {
+    const { x, y } = this
+    const { width, height } = this
+    return this.createLinkingSegment( { x: x - width / 2, y } )
+  }
+
+  createTbc() {
+    const { x, y } = this
+    const { width, height } = this
+    return this.createLinkingSegment( { x, y: y - height / 2 } )
+  }
+
+  createRbc() {
+    const { x, y } = this
+    const { width, height } = this
+    return this.createLinkingSegment( { x: x + width / 2, y } )
+  }
+
+  createBbc() {
+    const { x, y } = this
+    const { width, height } = this
+    return this.createLinkingSegment( { x, y: y + height / 2 } )
+  }
+
+  translateTo( x: number, y: number ) {
     const { view } = this
-    view.left = x - view.width / 2;
-    view.top = y + view.height / 2;
+    notNil( view ) && view.translateTo( x, y )
   }
 }

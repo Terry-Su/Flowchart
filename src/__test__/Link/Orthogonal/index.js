@@ -15,6 +15,7 @@ const node2 = ft.addNode( {
 } )
 
 const link1 = ft.addLink( {
+	type: 'orthogonal',	
 	source: node1,
 	target: node2,
 } )
