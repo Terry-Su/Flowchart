@@ -3,6 +3,9 @@ import Getters from "./flowchart/Getters"
 import Mutations from "./flowchart/Mutations"
 import Actions from "./flowchart/Actions"
 import Draw from "../../Draw/src/Draw";
+import DrawStore from "../../Draw/src/store/draw/DrawStore";
+import DrawGetters from '../../Draw/src/store/draw/getters';
+import DrawActions from '../../Draw/src/store/draw/actions';
 
 export default class Flowchart {
   draw: Draw
@@ -27,8 +30,20 @@ export default class Flowchart {
     this.actions = actions
   }
 
+  get drawStore(): DrawStore {
+		return this.draw.drawStore
+	}
+
+	get drawGetters(): DrawGetters {
+		return this.draw.getters
+	}
+
+	get drawActions(): DrawActions {
+		return this.draw.actions
+	}
+
   addNode( props: any = {} ) {
-    this.mutations.ADD_NODE( {
+    return this.mutations.ADD_NODE( {
       ...props,
       ft: this
     } )

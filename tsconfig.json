@@ -1,7 +1,7 @@
 {
 	"include": [
 		"src/**/*",
-		"../Draw/src/typings",
+		"../Draw/src/**/*",
 	],
 	"exclude": [
 		"node_modules",

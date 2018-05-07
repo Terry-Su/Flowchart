@@ -10,15 +10,18 @@ import Draw from '../../../Draw/src/Draw';
 
 export default class FlowChartParticle {
   ft: Flowchart
-  draw: Draw
+	draw: Draw
+	id: string = null
 
   constructor( props ) {
 		this.ft = props.ft
 		this.draw = props.ft.draw
+
+		this.id = this.getters.generateUniqueFtId()		
   }
 
   get ftStore(): FlowchartStore {
-		return this.ft.flowchartStore
+		return this.ft.ftStore
 	}
 
   get getters(): Getters {

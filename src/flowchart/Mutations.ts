@@ -11,8 +11,8 @@ export default class Mutations {
 
   ft: Flowchart
 
-  constructor( flowchartStore: FlowchartStore, getters: Getters, ft: Flowchart ) {
-    this.ftStore = flowchartStore
+  constructor( ftStore: FlowchartStore, getters: Getters, ft: Flowchart ) {
+    this.ftStore = ftStore
     this.getters = getters
     this.ft = ft
   }
@@ -21,10 +21,13 @@ export default class Mutations {
     const { getters } = this
     const node: Node = new Node( {
       ...props,
-      id: notNil( props.id ) ? props.id : getters.drawGetters.generateDrawUniqueId()
     } )
 
     this.ftStore.nodeList.push( node )
+
+    return node
   }
+
+  
 
 }

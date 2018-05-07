@@ -1,10 +1,14 @@
 import Rect from "../../../../Draw/src/model/shape/Rect";
-import { notNil } from "../../../../Draw/src/util/lodash/index";
+import { notNil, notUndefined } from "../../../../Draw/src/util/lodash/index";
 import FlowChartParticle from '../FlowChartParticle';
-import { RECT } from "../../../../Draw/src/store/constant/cellType";
+import NodeView from './NodeView/NodeView';
+import { RECT } from '../../constant/type/nodeViewTypes';
+import nodeViewObjectClassMap from "../../constant/map/nodeViewObjectClassMap";
+import { isNil } from 'lodash'
 
 export default class Node extends FlowChartParticle {
-  view: Rect
+  view: Rect = null
+  viewType: string = RECT
   x: number = 0;
   y: number = 0;
   label: String = "unknown"
@@ -12,26 +16,27 @@ export default class Node extends FlowChartParticle {
   constructor(props) {
     super( props )
 
-    this.label = notNil(props.label) ? props.label : this.label;
+    this.label = notUndefined(props.label) ? props.label : this.label;
+    this.viewType = notUndefined(props.type) ? props.type : this.viewType;
 
-    const { defaultWidth, defaultHeight } = this;
-
-    this.view = this.draw.addElement( RECT, { width: notNil(props.width) ? props.width : defaultWidth, height: notNil(props.width) ? props.width : defaultHeight, draw: this.draw } )
+    this.view = this.createView( { ...props, node: this, draw: this.draw } )
     
-    this.translateTo(
-      notNil(props.x) ? props.x : this.x,
-      notNil(props.y) ? props.y : this.y,
-    );
-
-    console.log( this.view )
+    if ( notNil( this.view ) ) {
+      this.translateTo(
+        notNil(props.x) ? props.x : this.x,
+        notNil(props.y) ? props.y : this.y,
+      )
+    }
   }
 
-  get defaultWidth(): number {
-    return 50;
-  }
+  createView( props: any = {} ): any {
+    const ObjectClass: any = nodeViewObjectClassMap[ this.viewType ]
+    if ( isNil( ObjectClass ) ) {
+      console.log( `Cannot find type: ${ this.viewType }` )
+      return null
+    }
 
-  get defaultHeight(): number {
-    return 30;
+    return new ObjectClass( props )
   }
 
   translateTo(x: number, y: number) {

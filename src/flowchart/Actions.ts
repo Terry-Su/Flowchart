@@ -3,14 +3,14 @@ import Getters from "./Getters"
 import Flowchart from '../Flowchart';
 
 export default class Actions {
-  flowchartStore: FlowchartStore
+  ftStore: FlowchartStore
 
   getters: Getters
 
   ft: Flowchart
 
-  constructor( flowchartStore: FlowchartStore, getters: Getters, ft: Flowchart ) {
-    this.flowchartStore = flowchartStore
+  constructor( ftStore: FlowchartStore, getters: Getters, ft: Flowchart ) {
+    this.ftStore = ftStore
     this.getters = getters
     this.ft = ft
   }
