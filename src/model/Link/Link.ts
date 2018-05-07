@@ -1,9 +1,12 @@
 import FlowChartParticle from "../FlowChartParticle"
-import { SIMPLE_LINE } from '../../constant/type/linkViewTypes';
+import { SIMPLE_LINE, ORTHOGONAL_LINE } from '../../constant/type/linkViewTypes';
 import { notUndefined } from "../../../../Draw/src/util/lodash/index";
 import { isNil } from 'lodash';
 import linkViewObjectClassMap from "../../constant/map/linkViewObjectClassMap";
 import Node from '../Node/Node';
+import LinkViewSimpleLine from './LinkView/LinkViewSimpleLine';
+import Segment from "../../../../Draw/src/model/Segment";
+import LinkViewOrthogonalLine from './LinkView/LinkViewOrthogonalLine';
 
 export default class Link extends FlowChartParticle {
   view: LinkView
@@ -22,15 +25,41 @@ export default class Link extends FlowChartParticle {
 
     this.viewType = notUndefined( props.type ) ? props.type : this.viewType
     
-    this.view = this.createView( { link: this, draw: this.draw, fillColor: props.fillColor } )
+    this.view = this.createView( {   } )
 
     this.mutations.ADD_LINK( this )
   }
 
   createView( props ) {
-    const ObjectClass: any = linkViewObjectClassMap[ this.viewType ]
+    const { viewType } = this
+    // const ObjectClass: any = linkViewObjectClassMap[ this.viewType ]
+
+    const commonProps = {
+      link: this,
+      draw: this.draw,
+      showArrow: true, 
+      fillColor: props.fillColor
+    }
+
+    if ( viewType === SIMPLE_LINE ) {
+      return new LinkViewSimpleLine( {
+        ...commonProps,
+        sourceSegment: this.source.center,
+        targetSegment: this.target.center,
+      } )
+    }
+
+    if ( viewType === ORTHOGONAL_LINE ) {
+      return new LinkViewOrthogonalLine( {
+        ...commonProps,
+        points: [
+          this.source.center.point,
+          this.target.center.point,
+        ]
+      } )
+    }
     
-    if ( isNil( ObjectClass ) ) {
+    else {
       console.log( `Cannot find link type: ${this.viewType}` )
       return null
     }

@@ -5,6 +5,9 @@ import DrawStore from "../../../Draw/src/store/draw/DrawStore";
 import DrawGetters from '../../../Draw/src/store/draw/getters';
 import DrawActions from '../../../Draw/src/store/draw/actions';
 import generateFtId from "../ftUtil/id/generateFtId";
+import Node from '../model/Node/Node';
+import LinkingSegment from '../model/Node/LinkingSegment/LinkingSegment';
+import { coincidePoint } from '../ftUtil/coincide/index';
 
 export default class Getters {
   ftStore: FlowchartStore;
@@ -42,6 +45,37 @@ export default class Getters {
         id = generateFtId()
         recurToGetUniqueId()
       } 
+    }
+  }
+
+
+  /**
+   * // LinkingSegment
+   */
+  getCoincidedInfo( point: Point2D ) {
+    let res = {
+      node: null,
+      linkingSegment: null
+    }
+
+    this.ftStore.nodeList.map( resolveNode )
+
+    return res
+
+    function resolveNode( node: Node ) {
+        node.linkingSegments.map( resolve )
+
+        if ( node.isPointInNodeRect( point ) ) {
+          res.node = node
+        }
+
+        function resolve( linkingSegment: LinkingSegment ) {
+            const { point: point2 } = linkingSegment
+            if ( coincidePoint( point, point2 ) ) {
+              res.node = node
+              res.linkingSegment = linkingSegment
+            }
+        }
     }
   }
 }

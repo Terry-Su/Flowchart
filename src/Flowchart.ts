@@ -8,6 +8,7 @@ import DrawGetters from "../../Draw/src/store/draw/getters"
 import DrawActions from "../../Draw/src/store/draw/actions"
 import Node from "./model/Node/Node"
 import Link from "./model/Link/Link"
+import { SIMPLE_LINE, ORTHOGONAL_LINE } from './constant/type/linkViewTypes';
 
 export default class Flowchart {
   draw: Draw
@@ -56,8 +57,7 @@ export default class Flowchart {
   }
 
   addNode( props: any = {} ) {
-    const node: Node = this.createNode( props )
-    return node
+    return this.createNode( props )
   }
 
   /**
@@ -72,10 +72,28 @@ export default class Flowchart {
     return link
   }
 
-  addLink( props: any = {} ) {
-    const link: Link = this.createLink( props )
+  createSimpleLineLink( props: any = {} ) {
+    const link: Link = new Link( {
+      ...props,
+      ft: this,
+      type: SIMPLE_LINE
+    } )
     return link
   }
+
+  createOrthogonalLineLink( props: any = {} ) {
+    const link: Link = new Link( {
+      ...props,
+      ft: this,
+      type: ORTHOGONAL_LINE
+    } )
+    return link
+  }
+
+  addLink( props: any = {} ) {
+    return this.createLink( props )
+  }
+  
 
   render() {
     this.draw.render()

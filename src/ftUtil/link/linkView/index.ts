@@ -1,20 +1,17 @@
 import Link from "../../../model/Link/Link"
-import Node from '../../../model/Node/Node';
-import { notNil } from "../../../../../Draw/src/util/lodash/index";
-import Segment from "../../../../../Draw/src/model/Segment";
+import Node from "../../../model/Node/Node"
+import { notNil } from "../../../../../Draw/src/util/lodash/index"
+import Segment from "../../../../../Draw/src/model/Segment"
 
-export function setLinkViewObjectCommonProps(
-  classObject: any,
-  link: Link
-) {
-  classObject.ft = link.ft
-  classObject.ftStore = link.ftStore
-  classObject.ftGetters = link.getters
-  classObject.ftMutations = link.mutations
-  classObject.ftActions = link.actions
+export function setLinkViewObjectCommonProps( classObject: any, link: Link ) {
+  if ( notNil( link ) ) {
+    classObject.ft = link.ft
+    classObject.ftStore = link.ftStore
+    classObject.ftGetters = link.getters
+    classObject.ftMutations = link.mutations
+    classObject.ftActions = link.actions
+  }
 }
-
-
 
 /**
  * // Orthogonal
@@ -53,8 +50,8 @@ export function getInitialPoints( source: Node, target: Node ) {
     if ( x === ox ) {
       if ( y < oy ) {
         return node.bbc
-      } 
-      if( y > oy ) {
+      }
+      if ( y > oy ) {
         return node.tbc
       }
     }
@@ -62,8 +59,8 @@ export function getInitialPoints( source: Node, target: Node ) {
     if ( y === oy ) {
       if ( x < ox ) {
         return node.rbc
-      } 
-      if( x > ox ) {
+      }
+      if ( x > ox ) {
         return node.lbc
       }
     }

@@ -1,0 +1,1 @@
+export const COINCIDE_POINT_RANGE = 10
