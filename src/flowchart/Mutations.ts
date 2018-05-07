@@ -3,6 +3,7 @@ import Getters from "./Getters"
 import Node from '../model/Node/Node';
 import { notNil } from "../../../Draw/src/util/lodash/index";
 import Flowchart from '../Flowchart';
+import Link from '../model/Link/Link';
 
 export default class Mutations {
   ftStore: FlowchartStore
@@ -17,15 +18,19 @@ export default class Mutations {
     this.ft = ft
   }
 
-  ADD_NODE( props: any = {} ) {
-    const { getters } = this
-    const node: Node = new Node( {
-      ...props,
-    } )
-
+  /**
+   * // Node
+   */
+  ADD_NODE( node: Node ) {
     this.ftStore.nodeList.push( node )
+  }
 
-    return node
+
+  /**
+   * // Link
+   */
+  ADD_LINK( link: Link ) {
+    this.ftStore.linkList.push( link )
   }
 
   
