@@ -3,11 +3,15 @@ import linkViewObjectClassMap from "../../../constant/map/linkViewObjectClassMap
 import Node from '../Node';
 import Getters from '../../../flowchart/Getters';
 import Flowchart from '../../../Flowchart';
+import { isNil } from 'lodash';
+import { notNil } from "../../../../../Draw/src/util/lodash/index";
 
 export default abstract class LinkingSegment extends Segment{
   node: Node
 
-  tmpLinkView: LinkView
+  tmpLine: TmpLinkingSegmentsLine
+
+  abstract type: string
 
   constructor(props) {
     super( props )
@@ -23,20 +27,27 @@ export default abstract class LinkingSegment extends Segment{
     return this.node.getters
   }
 
-  abstract createTmpLinkView( source: Point2D, moving: Point2D ): any 
+  abstract createTmpLine( source: Point2D, moving: Point2D ): any 
+
+  _removeTmpLine() {
+    this.tmpLine && this.tmpLine.forceRemove()
+    this.tmpLine = null
+  }
+
 
   handleDragging( event ) {
-    const { node } = this
+    const { node, tmpLine } = this
 
     const source: Point2D = this.node.center.point
     const moving: Point2D = this.getters.getInitialPoint( event )
 
-    this.tmpLinkView && this.tmpLinkView.forceRemove()
-    this.tmpLinkView = this.createTmpLinkView( source, moving )
+    if ( isNil( tmpLine ) ) {
+      this.tmpLine = this.createTmpLine( source, moving )
+    }
   }
 
   handleStopDrag( event ) {
-    this.tmpLinkView && this.tmpLinkView.forceRemove()
+    this._removeTmpLine() 
     
     super.handleStopDrag()
   }

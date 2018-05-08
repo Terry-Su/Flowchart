@@ -1,6 +1,6 @@
-import LinkViewSimpleLine from '../../model/Link/LinkView/LinkViewSimpleLine';
+import LinkViewSimpleLine from '../../model/Link/LinkViews/LinkViewSimpleLine';
 import { SIMPLE_LINE, ORTHOGONAL_LINE } from '../type/linkViewTypes';
-import LinkViewOrthogonalLine from '../../model/Link/LinkView/LinkViewOrthogonalLine';
+import LinkViewOrthogonalLine from '../../model/Link/LinkViews/LinkViewOrthogonalLine';
 
 
 export default {

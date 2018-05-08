@@ -4,9 +4,9 @@ import { notUndefined } from "../../../../Draw/src/util/lodash/index";
 import { isNil } from 'lodash';
 import linkViewObjectClassMap from "../../constant/map/linkViewObjectClassMap";
 import Node from '../Node/Node';
-import LinkViewSimpleLine from './LinkView/LinkViewSimpleLine';
+import LinkViewSimpleLine from './LinkViews/LinkViewSimpleLine';
 import Segment from "../../../../Draw/src/model/Segment";
-import LinkViewOrthogonalLine from './LinkView/LinkViewOrthogonalLine';
+import LinkViewOrthogonalLine from './LinkViews/LinkViewOrthogonalLine';
 
 export default class Link extends FlowChartParticle {
   view: LinkView

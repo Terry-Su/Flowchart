@@ -5,9 +5,9 @@ import { RECT } from "../../constant/type/nodeViewTypes"
 import nodeViewObjectClassMap from "../../constant/map/nodeViewObjectClassMap"
 import { isNil } from "lodash"
 import Segment from "../../../../Draw/src/model/Segment";
-import LinkingSegment from './LinkingSegment/LinkingSegment';
-import CenterLinkingSegment from './LinkingSegment/CenterLinkingSegment';
-import BorderCenterLinkingSegment from './LinkingSegment/BorderCenterLinkingSegment';
+import LinkingSegment from './LinkingSegments/LinkingSegment';
+import CenterLinkingSegment from './LinkingSegments/CenterLinkingSegment';
+import BorderCenterLinkingSegment from './LinkingSegments/BorderCenterLinkingSegment';
 import isPointInRect from "../../../../Draw/src/util/geometry/isPointInRect";
 
 export default class Node extends FlowChartParticle {
@@ -92,7 +92,6 @@ export default class Node extends FlowChartParticle {
 
   isPointInNodeRect( point: Point2D ): boolean {
     const { center, x, y, width, height } = this
-    console.log( isPointInRect( point, center.point, x - width / 2, y - height / 2 ) )
     return isPointInRect( point, center.point, x - width / 2, y - height / 2 )
   }
 
