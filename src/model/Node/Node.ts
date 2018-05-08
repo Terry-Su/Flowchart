@@ -25,26 +25,26 @@ export default class Node extends FlowChartParticle {
 
   label: String = "unknown"
 
-  center: LinkingSegment = null
+  center: CenterLinkingSegment = null
 
 
   /**
-   * Left border center segment
+   * Left border center linking segment
    */
   lbc: BorderCenterLinkingSegment = null
 
   /**
-   * Top border center segment
+   * Top border center linking segment
    */
   tbc: BorderCenterLinkingSegment = null
 
   /**
-   * Right border center segment
+   * Right border center linking segment
    */
   rbc: BorderCenterLinkingSegment = null
 
   /**
-   * Bottom border center segment
+   * Bottom border center linking segment
    */
   bbc: BorderCenterLinkingSegment = null
 
@@ -82,9 +82,9 @@ export default class Node extends FlowChartParticle {
   }
 
   /**
-   * Border center segments
+   * Border center linking segments
    */
-  get bcs() {
+  get bcss() {
     return [
       this.lbc, this.tbc, this.rbc, this.bbc
     ]
@@ -118,7 +118,7 @@ export default class Node extends FlowChartParticle {
     return new BorderCenterLinkingSegment( { ...props, draw: this.draw, draggable: false, fillColor: 'firebrick', node: this } )
   }
 
-  createCenter(): LinkingSegment {
+  createCenter(): CenterLinkingSegment {
     const { x, y } = this
     return this.createCenterLinkingSegment( { x, y } )
   }

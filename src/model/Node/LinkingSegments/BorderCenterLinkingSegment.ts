@@ -5,6 +5,7 @@ import { isNil } from 'lodash';
 import TmpOrthogonalLinkingSegmentsLine from './TmpLines/TmpOrthogonalLinkingSegmentsLine';
 import { NODE_BORDER_CENTER } from '../../../constant/type/linkingSegmentType';
 import MathSegmentLine from '../../../../../Draw/src/util/math/MathSegmentLine';
+import { lastElement, firstElement, findArrayLastIndex } from '../../../../../Draw/src/util/js/array';
 
 export default class BorderCenterLinkingSegment extends LinkingSegment {
   type: string = NODE_BORDER_CENTER
@@ -25,6 +26,30 @@ export default class BorderCenterLinkingSegment extends LinkingSegment {
 
   get extension(): Point2D {
     return this.bci.extension
+  }
+
+  get prevBcs(): BorderCenterLinkingSegment {
+    const { bcss } = node
+    const array = [
+      ...bcss,
+      firstElement( bcss )
+    ]
+
+    const index = findArrayLastIndex( array, this )
+
+		return notNil( index )  ? array[ index - 1 ] : null
+  }
+
+  get nextBcs(): BorderCenterLinkingSegment {
+    const { bcss } = node
+    const array = [
+      lastElement( bcss ),
+      ...bcss,
+    ]
+
+    const index = findArrayLastIndex( array, this )
+
+		return notNil( index )  ? array[ index + 1 ] : null
   }
 
   createTmpLine( source: Point2D, moving: Point2D ) {
