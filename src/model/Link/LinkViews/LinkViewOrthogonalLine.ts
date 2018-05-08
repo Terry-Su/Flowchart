@@ -19,10 +19,13 @@ export default class LinkViewOrthogonalLine extends OrthogonalLine {
 
     function setPropsDangerously( props: any ) {
       
-      if ( isNil( props.points ) ) {
-        const { source, target } = props
-        props.points = getInitialPoints( source, target )
-      }
+      const { source, target } = props.link
+
+      
+      // if ( isNil( props.points ) ) {
+      //   const { source, target } = props
+      //   props.points = getInitialPoints( source, target )
+      // }
 
       return props
     }

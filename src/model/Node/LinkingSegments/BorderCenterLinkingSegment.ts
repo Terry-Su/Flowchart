@@ -4,14 +4,27 @@ import { notNil } from '../../../../../Draw/src/util/lodash/index';
 import { isNil } from 'lodash';
 import TmpOrthogonalLinkingSegmentsLine from './TmpLines/TmpOrthogonalLinkingSegmentsLine';
 import { NODE_BORDER_CENTER } from '../../../constant/type/linkingSegmentType';
+import MathSegmentLine from '../../../../../Draw/src/util/math/MathSegmentLine';
 
 export default class BorderCenterLinkingSegment extends LinkingSegment {
   type: string = NODE_BORDER_CENTER
 
   tmpLine: TmpOrthogonalLinkingSegmentsLine
+
+  bci: BorderCenterInfo
+
+  toExtensionLine: MathSegmentLine
   
   constructor( props ) {
     super( props )
+
+    this.bci = props.bci
+
+    this.toExtensionLine = [ this, this.extension ]
+  }
+
+  get extension(): Point2D {
+    return this.bci.extension
   }
 
   createTmpLine( source: Point2D, moving: Point2D ) {
