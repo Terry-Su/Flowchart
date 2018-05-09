@@ -1,12 +1,13 @@
 import FlowChartParticle from "../FlowChartParticle"
-import { SIMPLE_LINE, ORTHOGONAL_LINE } from '../../constant/type/linkViewTypes';
-import { notUndefined } from "../../../../Draw/src/util/lodash/index";
-import { isNil } from 'lodash';
-import linkViewObjectClassMap from "../../constant/map/linkViewObjectClassMap";
-import Node from '../Node/Node';
-import LinkViewSimpleLine from './LinkViews/LinkViewSimpleLine';
-import Segment from "../../../../Draw/src/model/Segment";
-import LinkViewOrthogonalLine from './LinkViews/LinkViewOrthogonalLine';
+import { SIMPLE_LINE, ORTHOGONAL_LINE } from "../../constant/type/linkViewTypes"
+import { notUndefined } from "../../../../Draw/src/util/lodash/index"
+import { isNil } from "lodash"
+import linkViewObjectClassMap from "../../constant/map/linkViewObjectClassMap"
+import Node from "../Node/Node"
+import LinkViewSimpleLine from "./LinkViews/LinkViewSimpleLine"
+import Segment from "../../../../Draw/src/model/Segment"
+import LinkViewOrthogonalLine from "./LinkViews/LinkViewOrthogonalLine"
+import { createInitializeLinkViewOrthogonalLine } from "../../ftUtil/algorithm/orthogonalLine/index"
 
 export default class Link extends FlowChartParticle {
   view: LinkView
@@ -24,8 +25,8 @@ export default class Link extends FlowChartParticle {
     this.target = notUndefined( props.target ) ? props.target : this.target
 
     this.viewType = notUndefined( props.type ) ? props.type : this.viewType
-    
-    this.view = this.createView( {   } )
+
+    this.view = this.createView( {} )
 
     this.mutations.ADD_LINK( this )
   }
@@ -35,9 +36,9 @@ export default class Link extends FlowChartParticle {
     // const ObjectClass: any = linkViewObjectClassMap[ this.viewType ]
 
     const commonProps = {
-      link: this,
-      draw: this.draw,
-      showArrow: true, 
+      link     : this,
+      draw     : this.draw,
+      showArrow: true,
       fillColor: props.fillColor
     }
 
@@ -45,25 +46,15 @@ export default class Link extends FlowChartParticle {
       return new LinkViewSimpleLine( {
         ...commonProps,
         sourceSegment: this.source.center,
-        targetSegment: this.target.center,
+        targetSegment: this.target.center
       } )
     }
 
     if ( viewType === ORTHOGONAL_LINE ) {
-      return new LinkViewOrthogonalLine( {
-        ...commonProps,
-        points: [
-          this.source.center.point,
-          this.target.center.point,
-        ]
-      } )
-    }
-    
-    else {
-      console.log( `Cannot find link type: ${this.viewType}` )
-      return null
+      return createInitializeLinkViewOrthogonalLine( this )
     }
 
-    return new ObjectClass( props )
+    console.log( `Cannot find link type: ${this.viewType}` )
+    return null
   }
 }

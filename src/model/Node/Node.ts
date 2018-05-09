@@ -9,7 +9,7 @@ import LinkingSegment from './LinkingSegments/LinkingSegment';
 import CenterLinkingSegment from './LinkingSegments/CenterLinkingSegment';
 import BorderCenterLinkingSegment from './LinkingSegments/BorderCenterLinkingSegment';
 import isPointInRect from "../../../../Draw/src/util/geometry/isPointInRect";
-import RectUtil from "../../../../Draw/src/util/geometry/RectUtil/RectUtil";
+import MathRect from "../../../../Draw/src/util/math/MathRect";
 
 export default class Node extends FlowChartParticle {
   view: NodeView = null
@@ -48,7 +48,7 @@ export default class Node extends FlowChartParticle {
    */
   bbc: BorderCenterLinkingSegment = null
 
-  rectUtil: RectUtil = null
+  mathRect: MathRect = null
 
 
   static DEFAULT_WIDTH: number = 100
@@ -56,14 +56,14 @@ export default class Node extends FlowChartParticle {
 
   constructor( props ) {
     super( props )
-
+ 
     this.x = notUndefined( props.x ) ? props.x : this.x
     this.y = notUndefined( props.y ) ? props.y : this.y
 
     this.width = notUndefined( props.width ) ? props.width : this.width
     this.height = notUndefined( props.height ) ? props.height : this.height
 
-    this.rectUtil = new RectUtil( { x: this.x, y: this.y }, this.width, this.height )
+    this.mathRect = new MathRect( { x: this.x, y: this.y }, this.width, this.height )
     this.label = notUndefined( props.label ) ? props.label : this.label
     this.viewType = notUndefined( props.type ) ? props.type : this.viewType
 
@@ -125,26 +125,26 @@ export default class Node extends FlowChartParticle {
 
   createLbc() {
     const { x, y } = this
-    const { width, height, rectUtil } = this
-    return this.createBorderCenterLinkingSegment( { x: x - width / 2, y, bci: rectUtil.lbci } )
+    const { width, height, mathRect } = this
+    return this.createBorderCenterLinkingSegment( { x: x - width / 2, y, bci: mathRect.lbci } )
   }
 
   createTbc() {
     const { x, y } = this
-    const { width, height, rectUtil } = this
-    return this.createBorderCenterLinkingSegment( { x, y: y - height / 2, bci: rectUtil.tbci } )
+    const { width, height, mathRect } = this
+    return this.createBorderCenterLinkingSegment( { x, y: y - height / 2, bci: mathRect.tbci } )
   }
 
   createRbc() {
     const { x, y } = this
-    const { width, height, rectUtil } = this
-    return this.createBorderCenterLinkingSegment( { x: x + width / 2, y, bci: rectUtil.rbci } )
+    const { width, height, mathRect } = this
+    return this.createBorderCenterLinkingSegment( { x: x + width / 2, y, bci: mathRect.rbci } )
   }
 
   createBbc() {
     const { x, y } = this
-    const { width, height, rectUtil } = this
-    return this.createBorderCenterLinkingSegment( { x, y: y + height / 2, bci: rectUtil.bbci } )
+    const { width, height, mathRect } = this
+    return this.createBorderCenterLinkingSegment( { x, y: y + height / 2, bci: mathRect.bbci } )
   }
 
   translateTo( x: number, y: number ) {

@@ -21,7 +21,7 @@ export default class BorderCenterLinkingSegment extends LinkingSegment {
 
     this.bci = props.bci
 
-    this.toExtensionLine = [ this, this.extension ]
+    this.toExtensionLine = new MathSegmentLine( this.point, this.extension )
   }
 
   get extension(): Point2D {

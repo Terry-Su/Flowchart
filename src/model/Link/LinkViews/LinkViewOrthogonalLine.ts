@@ -11,23 +11,24 @@ export default class LinkViewOrthogonalLine extends OrthogonalLine {
   link: Link
 
   constructor( props ) {
-    super( setPropsDangerously( props ) )
+    super( props )
+    // super( setPropsDangerously( props ) )
 
     this.link = props.link
 
     setLinkViewObjectCommonProps( this, this.link )
 
-    function setPropsDangerously( props: any ) {
+    // function setPropsDangerously( props: any ) {
       
-      const { source, target } = props.link
+    //   const { source, target } = props.link
 
       
-      // if ( isNil( props.points ) ) {
-      //   const { source, target } = props
-      //   props.points = getInitialPoints( source, target )
-      // }
+    //   // if ( isNil( props.points ) ) {
+    //   //   const { source, target } = props
+    //   //   props.points = getInitialPoints( source, target )
+    //   // }
 
-      return props
-    }
+    //   return props
+    // }
   }
 }
