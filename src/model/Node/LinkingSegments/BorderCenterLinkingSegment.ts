@@ -6,22 +6,32 @@ import TmpOrthogonalLinkingSegmentsLine from './TmpLines/TmpOrthogonalLinkingSeg
 import { NODE_BORDER_CENTER } from '../../../constant/type/linkingSegmentType';
 import MathSegmentLine from '../../../../../Draw/src/util/math/MathSegmentLine';
 import { lastElement, firstElement, findArrayLastIndex } from '../../../../../Draw/src/util/js/array';
+import MathRect from '../../../../../Draw/src/util/math/MathRect';
 
 export default class BorderCenterLinkingSegment extends LinkingSegment {
   type: string = NODE_BORDER_CENTER
 
   tmpLine: TmpOrthogonalLinkingSegmentsLine
 
-  bci: BorderCenterInfo
+  mathRect: MathRect
 
-  toExtensionLine: MathSegmentLine
+  getBci: Function
   
   constructor( props ) {
     super( props )
 
-    this.bci = props.bci
+    this.mathRect = props.mathRect
 
-    this.toExtensionLine = new MathSegmentLine( this.point, this.extension )
+    this.getBci = props.getBci
+  }
+
+
+  get bci(): BorderCenterInfo {
+    return this.getBci( this.mathRect )
+  }
+
+  get toExtensionLine(): MathSegmentLine {
+    return new MathSegmentLine( this.point, this.extension )
   }
 
   get extension(): Point2D {
@@ -29,7 +39,7 @@ export default class BorderCenterLinkingSegment extends LinkingSegment {
   }
 
   get prevBcs(): BorderCenterLinkingSegment {
-    const { bcss } = node
+    const { bcss } = this.node
     const array = [
       ...bcss,
       firstElement( bcss )
@@ -41,7 +51,7 @@ export default class BorderCenterLinkingSegment extends LinkingSegment {
   }
 
   get nextBcs(): BorderCenterLinkingSegment {
-    const { bcss } = node
+    const { bcss } = this.node
     const array = [
       lastElement( bcss ),
       ...bcss,
@@ -51,6 +61,19 @@ export default class BorderCenterLinkingSegment extends LinkingSegment {
 
 		return notNil( index )  ? array[ index + 1 ] : null
   }
+
+  get oppositeBcs(): BorderCenterLinkingSegment {
+    const { bcss } = this.node
+    const { length } = bcss
+    const index = findArrayLastIndex( bcss, this )
+
+    if ( index < 2 ) {
+      return bcss[ length - 2 + index ]
+    } else {
+      return bcss[ index - 2 ]
+    }
+  }
+  
 
   createTmpLine( source: Point2D, moving: Point2D ) {
     return new TmpOrthogonalLinkingSegmentsLine( { draw: this.draw, points: [ this.point, moving ] } )

@@ -21,17 +21,28 @@ export default class Link extends FlowChartParticle {
   constructor( props ) {
     super( props )
 
-    this.source = notUndefined( props.source ) ? props.source : this.source
-    this.target = notUndefined( props.target ) ? props.target : this.target
+
+    notUndefined( props.source ) && this.setSource( props.source )
+    notUndefined( props.target ) && this.setTarget( props.target )
 
     this.viewType = notUndefined( props.type ) ? props.type : this.viewType
 
-    this.view = this.createView( {} )
+    this.view = this.createView( props )
 
     this.mutations.ADD_LINK( this )
   }
 
-  createView( props ) {
+  setSource( source: Node ) {
+    this.source = source
+    source.addLink( this )
+  }
+
+  setTarget( target: Node ) {
+    this.target = target
+    target.addLink( this )
+  }
+
+  createView( props: any = {} ): any {
     const { viewType } = this
     // const ObjectClass: any = linkViewObjectClassMap[ this.viewType ]
 
@@ -56,5 +67,20 @@ export default class Link extends FlowChartParticle {
 
     console.log( `Cannot find link type: ${this.viewType}` )
     return null
+  }
+
+  /**
+   * // Link
+   */
+  removeView() {
+    this.view && this.view.remove()
+    this.view && this.view.forceRemove && this.view.forceRemove()
+  }
+
+  remove() {
+    this.source.removeLink( this )
+    this.target.removeLink( this )
+    this.removeView()
+    this.mutations.REMOVE_LINK( this )
   }
 }

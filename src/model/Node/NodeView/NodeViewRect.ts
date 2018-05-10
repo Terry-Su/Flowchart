@@ -23,4 +23,32 @@ export default class NodeViewRect extends Rect {
       return props
     }
   }
+
+  updateDrag( event ) {
+    const point: Point2DInitial = this.getters.getInitialPoint( event )
+		const deltaX = this.dragger.getDeltaXToPrevPoint( point )
+    const deltaY = this.dragger.getDeltaYToPrevPoint( point )
+
+    this.node.translateByView( deltaX, deltaY )
+
+    super.updateDrag( event )
+  }
+
+  handleAfterDragging() {
+    const { links } = this.node
+    links.map( link => {
+      const { source, target } = link
+
+      link.remove()
+
+      this.node.ft.addLink( {
+        type: 'orthogonal',	
+        source,
+        target,
+      } )
+
+      this.node.ft.render()
+    } )
+
+  }
 }

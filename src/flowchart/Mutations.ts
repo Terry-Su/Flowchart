@@ -4,6 +4,7 @@ import Node from '../model/Node/Node';
 import { notNil } from "../../../Draw/src/util/lodash/index";
 import Flowchart from '../Flowchart';
 import Link from '../model/Link/Link';
+import { removeElement } from "../../../Draw/src/util/js/array";
 
 export default class Mutations {
   ftStore: FlowchartStore
@@ -32,6 +33,20 @@ export default class Mutations {
   ADD_LINK( link: Link ) {
     this.ftStore.linkList.push( link )
   }
+
+  REMOVE_NODE( node: Node ) {
+		if ( notNil( node ) ) {
+			const nodes: Node[] = this.ftStore.nodeList
+      removeElement( nodes, node )
+		}
+  }
+  
+  REMOVE_LINK( link: Link ) {
+		if ( notNil( link ) ) {
+			const links: Link[] = this.ftStore.linkList
+      removeElement( links, link )
+		}
+	}
 
   
 

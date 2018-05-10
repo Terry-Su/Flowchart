@@ -10,6 +10,8 @@ import CenterLinkingSegment from './LinkingSegments/CenterLinkingSegment';
 import BorderCenterLinkingSegment from './LinkingSegments/BorderCenterLinkingSegment';
 import isPointInRect from "../../../../Draw/src/util/geometry/isPointInRect";
 import MathRect from "../../../../Draw/src/util/math/MathRect";
+import Link from '../Link/Link';
+import { removeElement } from "../../../../Draw/src/util/js/array";
 
 export default class Node extends FlowChartParticle {
   view: NodeView = null
@@ -50,9 +52,12 @@ export default class Node extends FlowChartParticle {
 
   mathRect: MathRect = null
 
+  links: Link[] = []
+
 
   static DEFAULT_WIDTH: number = 100
   static DEFAULT_HEIGHT: number = 80
+  static DEFAULT_MATH_RECT_EXTENDING_DISTANCE: number = 50
 
   constructor( props ) {
     super( props )
@@ -63,7 +68,7 @@ export default class Node extends FlowChartParticle {
     this.width = notUndefined( props.width ) ? props.width : this.width
     this.height = notUndefined( props.height ) ? props.height : this.height
 
-    this.mathRect = new MathRect( { x: this.x, y: this.y }, this.width, this.height )
+    this.mathRect = new MathRect( { x: this.x, y: this.y }, this.width, this.height, Node.DEFAULT_MATH_RECT_EXTENDING_DISTANCE )
     this.label = notUndefined( props.label ) ? props.label : this.label
     this.viewType = notUndefined( props.type ) ? props.type : this.viewType
 
@@ -126,29 +131,63 @@ export default class Node extends FlowChartParticle {
   createLbc() {
     const { x, y } = this
     const { width, height, mathRect } = this
-    return this.createBorderCenterLinkingSegment( { x: x - width / 2, y, bci: mathRect.lbci } )
+    return this.createBorderCenterLinkingSegment( { x: x - width / 2, y, mathRect, getBci: (mathRect) => mathRect.lbci } )
   }
 
   createTbc() {
     const { x, y } = this
     const { width, height, mathRect } = this
-    return this.createBorderCenterLinkingSegment( { x, y: y - height / 2, bci: mathRect.tbci } )
+    return this.createBorderCenterLinkingSegment( { x, y: y - height / 2, mathRect,  getBci: (mathRect) => mathRect.tbci } )
   }
 
   createRbc() {
     const { x, y } = this
     const { width, height, mathRect } = this
-    return this.createBorderCenterLinkingSegment( { x: x + width / 2, y, bci: mathRect.rbci } )
+    return this.createBorderCenterLinkingSegment( { x: x + width / 2, mathRect,  y, getBci: (mathRect) => mathRect.rbci } )
   }
 
   createBbc() {
     const { x, y } = this
     const { width, height, mathRect } = this
-    return this.createBorderCenterLinkingSegment( { x, y: y + height / 2, bci: mathRect.bbci } )
+    return this.createBorderCenterLinkingSegment( { x, y: y + height / 2, mathRect,  getBci: (mathRect) => mathRect.bbci } )
+  }
+
+
+  translateLinkingSegments( dx: number, dy: number ) {
+    this.draw.sharedActions.translateSegments( this.linkingSegments, dx, dy )
   }
 
   translateTo( x: number, y: number ) {
     const { view } = this
     notNil( view ) && view.translateTo( x, y )
+  }
+
+  translateByView( dx: number, dy: number ) {
+    this.x = this.x + dx
+    this.y = this.y + dx
+    this.translateLinkingSegments( dx, dy )
+    this.mathRect.translateCenter( dx, dy )
+  }
+
+  /**
+   * // Links
+   */
+  addLink( link: Link ) {
+    this.links.push( link )
+  }
+
+  removeLink( link: Link ) {
+    notNil( link ) && removeElement( this.links, link )
+  }
+
+  /**
+   * Node
+   */
+  removeView() {
+    this.view && this.view.remove()
+  }
+  remove() {
+    this.removeView()
+    this.mutations.REMOVE_NODE( this )
   }
 }
