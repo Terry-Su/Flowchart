@@ -3,6 +3,7 @@ import Flowchart from '../../../Flowchart';
 import Node from '../Node';
 import setNodeViewObjectCommonProps from '../../../ftUtil/node/nodeView/index';
 import { notNil, notUndefined } from "../../../../../Draw/src/util/lodash/index";
+import { getInitializeLinkViewOrthogonalLineCorners } from '../../../ftUtil/algorithm/orthogonalLine/index';
 
 export default class NodeViewRect extends Rect {
   node: Node
@@ -39,13 +40,32 @@ export default class NodeViewRect extends Rect {
     links.map( link => {
       const { source, target } = link
 
-      link.remove()
 
-      this.node.ft.addLink( {
-        type: 'orthogonal',	
-        source,
-        target,
-      } )
+      const { view }: {view: any} = link
+
+
+      this.actions.REMOVE_ELEMENTS( [ view.startSegment, view.endSegment ] )
+
+      const corners = getInitializeLinkViewOrthogonalLineCorners( link )
+
+      view.removeCornerSegments( view.cornerSegments )      
+      this.actions.REMOVE_ELEMENTS(view.cornerSegments )
+      // corners.map( corner => view.addCornerSegmentEnd( corner ) )
+      view.cornerSegments = corners.map( corner => view.createCornerSegment( corner ) )
+
+      view.startSegment = view.createStartSegment( link.sourceLinkingSegment.point )
+      view.endSegment = view.createEndSegment( link.targetLinkingSegment.point )
+
+      view._refreshLines()
+      
+      // this.node.ft.addLink( {
+      //   type: 'orthogonal',	
+      //   source,
+      //   target,
+      // } )
+
+      // link.remove()
+      
 
       this.node.ft.render()
     } )

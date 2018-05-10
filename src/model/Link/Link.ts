@@ -8,6 +8,7 @@ import LinkViewSimpleLine from "./LinkViews/LinkViewSimpleLine"
 import Segment from "../../../../Draw/src/model/Segment"
 import LinkViewOrthogonalLine from "./LinkViews/LinkViewOrthogonalLine"
 import { createInitializeLinkViewOrthogonalLine } from "../../ftUtil/algorithm/orthogonalLine/index"
+import BorderCenterLinkingSegment from '../Node/LinkingSegments/BorderCenterLinkingSegment';
 
 export default class Link extends FlowChartParticle {
   view: LinkView
@@ -30,6 +31,14 @@ export default class Link extends FlowChartParticle {
     this.view = this.createView( props )
 
     this.mutations.ADD_LINK( this )
+  }
+
+  get sourceLinkingSegment(): BorderCenterLinkingSegment {
+    return this.source.bbc
+  }
+
+  get targetLinkingSegment(): BorderCenterLinkingSegment {
+    return this.target.tbc
   }
 
   setSource( source: Node ) {
@@ -83,4 +92,11 @@ export default class Link extends FlowChartParticle {
     this.removeView()
     this.mutations.REMOVE_LINK( this )
   }
+
+  /**
+   * // View
+   */
+  // refreshView() {
+  //   this.view && this.view.refresh()
+  // }
 }

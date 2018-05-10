@@ -31,4 +31,8 @@ export default class LinkViewOrthogonalLine extends OrthogonalLine {
     //   return props
     // }
   }
+
+  refresh() {
+    
+  }
 }
