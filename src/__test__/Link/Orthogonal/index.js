@@ -9,7 +9,7 @@ const node1 = ft.addNode( {
 
 const node2 = ft.addNode( {
 	x: 500,
-	y: 200,
+	y: 240,
 	label: '节点2',
 	fillColor: 'DeepskyBlue'
 } )

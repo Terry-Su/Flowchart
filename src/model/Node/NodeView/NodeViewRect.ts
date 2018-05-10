@@ -35,7 +35,7 @@ export default class NodeViewRect extends Rect {
     super.updateDrag( event )
   }
 
-  handleAfterDragging() {
+  handleDragging() {
     const { links } = this.node
     links.map( link => {
       const { source, target } = link
@@ -48,15 +48,17 @@ export default class NodeViewRect extends Rect {
 
       const corners = getInitializeLinkViewOrthogonalLineCorners( link )
 
-      view.removeCornerSegments( view.cornerSegments )      
-      this.actions.REMOVE_ELEMENTS(view.cornerSegments )
-      // corners.map( corner => view.addCornerSegmentEnd( corner ) )
-      view.cornerSegments = corners.map( corner => view.createCornerSegment( corner ) )
+      // view.removeCornerSegments( view.cornerSegments )      
+      this.actions.REMOVE_ELEMENTS(view.cornerSegments )      
 
-      view.startSegment = view.createStartSegment( link.sourceLinkingSegment.point )
-      view.endSegment = view.createEndSegment( link.targetLinkingSegment.point )
+      view.reGenerate( [ link.sourceLinkingSegment.point, ...corners, link.targetLinkingSegment.point ] )
+      
+      // view.cornerSegments = corners.map( corner => view.createCornerSegment( corner ) )
 
-      view._refreshLines()
+      // view.startSegment = view.createStartSegment( link.sourceLinkingSegment.point )
+      // view.endSegment = view.createEndSegment( link.targetLinkingSegment.point )
+
+      // view.refresh()
       
       // this.node.ft.addLink( {
       //   type: 'orthogonal',	

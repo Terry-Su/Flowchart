@@ -14,30 +14,26 @@ import {
 import { notNil } from "../../../../../Draw/src/util/lodash/index"
 import CornerSegment from "../../../../../Draw/src/model/shape/OrthogonalLine/CornerSegment"
 import distance from "../../../../../Draw/src/util/geometry/distance"
+import getPointsCenter from "../../../../../Draw/src/util/geometry/getPointsCenter";
 
 export function createInitializeLinkViewOrthogonalLine( link: Link ) {
-  const { source, target }: Link = link  
-  // const sourceLinkingSegment: BorderCenterLinkingSegment = source.rbc
-  // const targetLinkingSegment: BorderCenterLinkingSegment = target.tbc
-
-  const { sourceLinkingSegment, targetLinkingSegment } = link  
-
+  const self = this
+  const { sourceLinkingSegment, targetLinkingSegment }: Link = link
+  
   const corners = getInitializeLinkViewOrthogonalLineCorners( link )
-  
-  const points = [ sourceLinkingSegment, ...corners, targetLinkingSegment ]
-  // const points = [ link.sourceLinkingSegment, ...corners, link.targetLinkingSegment ]
 
-  link.draw.getters.testUtils.delayRenderPoints( corners, 'purple' )
-  
+  link.drawGetters.testUtils.delayRenderPoints( corners, 'black' )
+
+  const points = [ sourceLinkingSegment.point, ...corners, targetLinkingSegment.point ]
   return new LinkViewOrthogonalLine( { link, draw: link.draw, points } )
+
 }
 
 export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
   const self = this
   const { source, target }: Link = link
-  // const sourceLinkingSegment: BorderCenterLinkingSegment = source.rbc
-  // const targetLinkingSegment: BorderCenterLinkingSegment = target.rbc
-  const { sourceLinkingSegment, targetLinkingSegment } = link
+  const { sourceLinkingSegment, targetLinkingSegment }: Link = link
+  
   const { x: sx, y: sy } = sourceLinkingSegment
   const { x: tx, y: ty } = targetLinkingSegment
 
@@ -74,7 +70,7 @@ export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
     const isIntersectTargetRect = isIntersected( intersectedInfo )
 
     if( isIntersectTargetRect ) {
-      connectTargetLinking( line )
+      connectTargetLinking( line, true )
     }
 
     if ( ! isIntersectTargetRect ) {
@@ -99,7 +95,7 @@ export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
     const isIntersectSouceRect = isIntersected( intersectedInfo )
     if ( isIntersectSouceRect ) {
       const cornerExtension = getCornerExtensionNearPoint( sourceBci.cornerExtensions, targetLinkingPoint )
-      // link.draw.getters.testUtils.delayRenderPoint( cornerExtension, 'purple' )
+      link.draw.getters.testUtils.delayRenderPoint( cornerExtension, 'purple' )
       corners.push( cornerExtension )
        
       const turningCorner2 = getTurningCornerTowardsTargetLinking( sourceToExtensionLine.points, cornerExtension  )
@@ -116,7 +112,10 @@ export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
     }
   }
 
+  // link.draw.getters.testUtils.delayRenderPoints( corners, 'purple' )
  
+  // console.log( corners )
+
   return corners
 
 
@@ -124,14 +123,14 @@ export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
   /**
    * Main
    */
-  function connectTargetLinking( inputLine: MathSegmentLine ) {
+  function connectTargetLinking( inputLine: MathSegmentLine, fromSourceLinking: boolean = false ) {
     const { start: inputStart } = inputLine
 
-    if ( isTargetLinkingTheClosePerpLinking() ) {
+    if ( isNearTargetLinkingBorder() ) {
 
     }
 
-    if ( isTargetLinkingTheFarPerpLinking() ) {
+    if ( isFarTargetLinkingBorder() ) {
         const { cornerExtensions } = targetBci
         const cornerExtension = getCornerExtensionNearPoint( cornerExtensions, sourceLinkingPoint )
 
@@ -142,14 +141,23 @@ export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
         corners.push( targetExtension )
     }
 
-    if ( isTargetLinkingTheParallelLinking() ) {
-      const turningCorner = getTurningCornerTowardsPoint( targetToExtensionLine.points, inputStart, targetExtension )
-      
-      corners.push( turningCorner )
+    if ( isParallelTargetLinkingBorder() ) {
+
+      if ( fromSourceLinking ) {
+        const center = getCenterBetweenSourceLinkingToNearestBcsWhenIsParallelTargetLinkingBorder()
+        corners.push( center )
+
+        const turningCorner = getTurningCornerTowardsPoint( targetToExtensionLine.points, center, targetExtension )
+        corners.push( turningCorner )
+      } else {
+        const turningCorner = getTurningCornerTowardsPoint( targetToExtensionLine.points, inputStart, targetExtension )
+        corners.push( turningCorner )
+      }
+
       corners.push( targetExtension )
     }
 
-    function isTargetLinkingTheClosePerpLinking() {
+    function isNearTargetLinkingBorder() {
       if ( targetToExtensionLine.parallelWith( inputLine ) ) {
         const targetOpposite: BorderCenterLinkingSegment =
           targetLinkingSegment.oppositeBcs
@@ -165,7 +173,7 @@ export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
       return false
     }
 
-    function isTargetLinkingTheFarPerpLinking() {
+    function isFarTargetLinkingBorder() {
       if ( targetToExtensionLine.parallelWith( inputLine ) ) {
         const targetOpposite: BorderCenterLinkingSegment =
           targetLinkingSegment.oppositeBcs
@@ -181,8 +189,35 @@ export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
       return false
     }
 
-    function isTargetLinkingTheParallelLinking() {
+    function isParallelTargetLinkingBorder() {
       return targetToExtensionLine.perpWith( inputLine )
+    }
+
+    function getNearestTargetBcsToSourceLinkingWhenIsParallelTargetLinkingBorder(): BorderCenterLinkingSegment {
+      const prev = targetLinkingSegment.prevBcs
+      const next = targetLinkingSegment.nextBcs
+  
+      if (
+        distance( sourceLinkingPoint, prev.point ) < distance( sourceLinkingPoint, next.point )
+      ) {
+        return prev
+      } else {
+        return next
+      }
+    }
+  
+    function getCenterBetweenSourceLinkingToNearestBcsWhenIsParallelTargetLinkingBorder(): Point2D {
+      const targetBcs = getNearestTargetBcsToSourceLinkingWhenIsParallelTargetLinkingBorder()
+      const { x, y } = sourceLinkingPoint
+      const { x: tx, y: ty } =     targetBcs
+      const center = sourceToExtensionLine.isVertical ? {
+        x,
+        y: ( y + ty ) / 2
+      } : {
+        x: ( x + tx ) / 2,
+        y
+      }
+      return center
     }
 
   }
@@ -268,6 +303,8 @@ export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
       return b
     }
   }
+
+  
 }
 
 export default function connectOrthogonalLine(

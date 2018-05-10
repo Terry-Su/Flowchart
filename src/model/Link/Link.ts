@@ -34,7 +34,7 @@ export default class Link extends FlowChartParticle {
   }
 
   get sourceLinkingSegment(): BorderCenterLinkingSegment {
-    return this.source.bbc
+    return this.source.rbc
   }
 
   get targetLinkingSegment(): BorderCenterLinkingSegment {
@@ -92,11 +92,4 @@ export default class Link extends FlowChartParticle {
     this.removeView()
     this.mutations.REMOVE_LINK( this )
   }
-
-  /**
-   * // View
-   */
-  // refreshView() {
-  //   this.view && this.view.refresh()
-  // }
 }
