@@ -38,7 +38,7 @@ export default class Link extends FlowChartParticle {
   }
 
   get targetLinkingSegment(): BorderCenterLinkingSegment {
-    return this.target.tbc
+    return this.target.lbc
   }
 
   setSource( source: Node ) {
@@ -59,7 +59,7 @@ export default class Link extends FlowChartParticle {
       link     : this,
       draw     : this.draw,
       showArrow: true,
-      fillColor: props.fillColor
+      fillColor: props.fillColor,
     }
 
     if ( viewType === SIMPLE_LINE ) {

@@ -72,7 +72,7 @@ export default class Node extends FlowChartParticle {
     this.label = notUndefined( props.label ) ? props.label : this.label
     this.viewType = notUndefined( props.type ) ? props.type : this.viewType
 
-    this.view = this.createView( { node: this, draw: this.draw, fillColor: props.fillColor } )
+    this.view = this.createView( { node: this, draw: this.draw, fillColor: props.fillColor, width: this.width, height: this.height } )
 
     this.center = this.createCenter()
 

@@ -8,6 +8,7 @@ import MathSegmentLine from '../../../../../Draw/src/util/math/MathSegmentLine';
 import { lastElement, firstElement, findArrayLastIndex } from '../../../../../Draw/src/util/js/array';
 import MathRect from '../../../../../Draw/src/util/math/MathRect';
 
+
 export default class BorderCenterLinkingSegment extends LinkingSegment {
   type: string = NODE_BORDER_CENTER
 
