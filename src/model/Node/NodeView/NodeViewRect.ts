@@ -47,7 +47,6 @@ export default class NodeViewRect extends Rect {
       this.actions.REMOVE_ELEMENTS( [ view.startSegment, view.endSegment ] )
 
       const corners = getInitializeLinkViewOrthogonalLineCorners( link )
-      link.drawGetters.testUtils.delayRenderPoints( corners, 'black' )      
 
       // view.removeCornerSegments( view.cornerSegments )      
       this.actions.REMOVE_ELEMENTS(view.cornerSegments )      
@@ -70,6 +69,7 @@ export default class NodeViewRect extends Rect {
       // link.remove()
 
       
+      link.drawGetters.testUtils.delayRenderPoints( corners, 'black' )      
       
 
       this.node.ft.render()
