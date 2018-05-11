@@ -5,7 +5,7 @@ import { isNil } from 'lodash';
 import TmpOrthogonalLinkingSegmentsLine from './TmpLines/TmpOrthogonalLinkingSegmentsLine';
 import { NODE_BORDER_CENTER } from '../../../constant/type/linkingSegmentType';
 import MathSegmentLine from '../../../../../Draw/src/util/math/MathSegmentLine';
-import { lastElement, firstElement, findArrayLastIndex } from '../../../../../Draw/src/util/js/array';
+import { lastElement, firstElement, findArrayLastIndex, findArrayFirstIndex } from '../../../../../Draw/src/util/js/array';
 import MathRect from '../../../../../Draw/src/util/math/MathRect';
 
 
@@ -58,7 +58,7 @@ export default class BorderCenterLinkingSegment extends LinkingSegment {
       ...bcss,
     ]
 
-    const index = findArrayLastIndex( array, this )
+    const index = findArrayFirstIndex( array, this )
 
 		return notNil( index )  ? array[ index + 1 ] : null
   }

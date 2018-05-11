@@ -9,7 +9,7 @@ const node1 = ft.addNode( {
 
 const node2 = ft.addNode( {
 	x: 500,
-	y: 390,
+	y: 500,
 
 	// x: 160,
 	// y: 300,

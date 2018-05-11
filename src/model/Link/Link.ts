@@ -22,7 +22,6 @@ export default class Link extends FlowChartParticle {
   constructor( props ) {
     super( props )
 
-
     notUndefined( props.source ) && this.setSource( props.source )
     notUndefined( props.target ) && this.setTarget( props.target )
 
@@ -38,7 +37,7 @@ export default class Link extends FlowChartParticle {
   }
 
   get targetLinkingSegment(): BorderCenterLinkingSegment {
-    return this.target.tbc
+    return this.target.bbc
   }
 
   setSource( source: Node ) {
