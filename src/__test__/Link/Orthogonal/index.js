@@ -8,7 +8,7 @@ const node1 = ft.addNode( {
 } )
 
 const node2 = ft.addNode( {
-	x: 100,
+	x: 340,
 	y: 300,
 
 	// x: 160,

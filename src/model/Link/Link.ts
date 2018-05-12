@@ -37,7 +37,7 @@ export default class Link extends FlowChartParticle {
   }
 
   get targetLinkingSegment(): BorderCenterLinkingSegment {
-    return this.target.tbc
+    return this.target.bbc
   }
 
   setSource( source: Node ) {
