@@ -57,7 +57,7 @@ export default class Node extends FlowChartParticle {
 
   static DEFAULT_WIDTH: number = 100
   static DEFAULT_HEIGHT: number = 80
-  static DEFAULT_MATH_RECT_EXTENDING_DISTANCE: number = 30
+  static DEFAULT_MATH_RECT_EXTENDING_DISTANCE: number = 10
 
   constructor( props ) {
     super( props )

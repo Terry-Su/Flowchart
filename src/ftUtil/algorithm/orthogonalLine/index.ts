@@ -14,7 +14,7 @@ import {
 import { notNil } from "../../../../../Draw/src/util/lodash/index"
 import CornerSegment from "../../../../../Draw/src/model/shape/OrthogonalLine/CornerSegment"
 import distance from "../../../../../Draw/src/util/geometry/distance"
-import { intersectionWith, isEqual, minBy, maxBy } from "lodash"
+import { intersectionWith, isEqual, minBy, maxBy, uniqWith } from "lodash"
 import MiniMap from "../../../../../Draw/src/model/tool/MiniMap"
 import getCenterPoint from "../../../../../Draw/src/util/geometry/basic/getCenterPoint";
 import { equalPoint } from "../../../../../Draw/src/util/js/compare";
@@ -121,6 +121,8 @@ export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
   // link.draw.getters.testUtils.delayRenderPoints( corners, 'purple' )
 
   // console.log( corners )
+
+  corners = uniqWith( corners, isEqual )
 
   return corners
 
@@ -242,8 +244,12 @@ export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
         // )
         corners.push( keyPoint2 )
 
-        const turningCorner = getTurningCornerTowardsTargetLinking( targetBci.cornerExtensions, keyPoint2 )
-        corners.push( turningCorner )
+        const nearTargetCornerExtension = getNearTargetCornerExtensionToSourceLinking()
+        corners.push( nearTargetCornerExtension )
+        corners.push( targetExtension )
+
+        // const turningCorner = getTurningCornerTowardsTargetLinking( targetBci.cornerExtensions, keyPoint2 )
+        // corners.push( turningCorner )
       }
 
     }
@@ -515,16 +521,25 @@ export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
     }
 
     if ( isIntersectSouceRect ) {
-      const nearestSourceBcs = getNearestSourceBcsOnSameHOrVRectBorder()
-      const center = getCenterPoint( targetLinkingPoint, nearestSourceBcs.point  )
-      const corner = getTurningCornerTowardsPoint(
-        targetToExtensionLine.points,
-        inputStart,
-        center
-      )
-      return corner
-    }
+      const nearTargetCornerExtension = getNearTargetCornerExtensionToSourceLinking()
 
+      const corner = getTurningCornerTowardsPoint(
+        targetBci.cornerExtensions,
+        inputStart,
+        nearTargetCornerExtension
+      )
+
+      return corner
+
+      // const nearestSourceBcs = getNearestSourceBcsOnSameHOrVRectBorder()
+      // const center = getCenterPoint( targetLinkingPoint, nearestSourceBcs.point  )
+      // const corner = getTurningCornerTowardsPoint(
+      //   targetToExtensionLine.points,
+      //   inputStart,
+      //   center
+      // )
+      // return corner
+    }
 
   }
 
@@ -683,6 +698,10 @@ export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
     } else {
       return sourceB
     }
+  }
+
+  function getNearTargetCornerExtensionToSourceLinking(): Point2D {
+    return minBy( targetBci.cornerExtensions, point => distance( point, sourceLinkingPoint ) )
   }
 }
 
