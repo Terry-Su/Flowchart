@@ -1,7 +1,7 @@
 import OrthogonalLine from "../../../../../Draw/src/model/shape/OrthogonalLine/OrthogonalLine"
 import Node from "../../../model/Node/Node"
 import LinkingSegment from "../../../model/Node/LinkingSegments/LinkingSegment"
-import BorderCenterLinkingSegment from "../../../model/Node/LinkingSegments/BorderCenterLinkingSegment"
+import BorderCenterLinkingSegment from '../../../model/Node/LinkingSegments/BorderCenterLinkingSegment';
 import Link from "../../../model/Link/Link"
 import LinkViewOrthogonalLine from "../../../model/Link/LinkViews/LinkViewOrthogonalLine"
 import MathSegmentLine from "../../../../../Draw/src/util/math/MathSegmentLine"
@@ -14,9 +14,9 @@ import {
 import { notNil } from "../../../../../Draw/src/util/lodash/index"
 import CornerSegment from "../../../../../Draw/src/model/shape/OrthogonalLine/CornerSegment"
 import distance from "../../../../../Draw/src/util/geometry/distance"
-import getPointsCenter from "../../../../../Draw/src/util/geometry/getPointsCenter"
 import { intersectionWith, isEqual, minBy, maxBy } from "lodash"
 import MiniMap from "../../../../../Draw/src/model/tool/MiniMap"
+import getCenterPoint from "../../../../../Draw/src/util/geometry/basic/getCenterPoint";
 
 const { abs } = Math
 
@@ -230,22 +230,26 @@ export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
         const center = getCenterBetweenSourceLinkingToNearestBcsWhenIsParallelTargetLinkingBorder()
         corners.push( center )
 
-        const turningCorner = getTurningCornerTowardsPoint(
+        const corner = getTurningCornerTowardsPoint(
           sourceBci.cornerExtensions,
           center,
           targetExtension
         )
-        corners.push( turningCorner )
+        corners.push( corner )
+        corners.push( targetExtension )  
       } else {
-        const turningCorner = getTurningCornerTowardsPoint(
-          targetToExtensionLine.points,
-          inputStart,
-          targetExtension
-        )
+        const keyPoint2 = getKeyPoint2( inputLine )
+        // const corner = getTurningCornerTowardsPoint(
+        //   targetToExtensionLine.points,
+        //   inputStart,
+        //   targetExtension
+        // )
+        corners.push( keyPoint2 )
+
+        const turningCorner = getTurningCornerTowardsTargetLinking( targetBci.cornerExtensions, keyPoint2 )
         corners.push( turningCorner )
       }
 
-      corners.push( targetExtension )
     }
 
     function getNearestTargetBcsToSourceLinkingWhenIsParallelTargetLinkingBorder(): BorderCenterLinkingSegment {
@@ -496,6 +500,39 @@ export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
     }
   }
 
+  function getKeyPoint2( inputLine: MathSegmentLine ) {
+    const { isVertical, isHorizontal, start: inputStart } = inputLine 
+
+    const defaultCorner = getTurningCornerTowardsPoint(
+      targetToExtensionLine.points,
+      inputStart,
+      targetExtension
+    )
+
+    const checkingLine = new MathSegmentLine( defaultCorner, targetExtension )
+
+    const intersectedInfo = sourceRect.intersectSegmentLineInfo( checkingLine )
+    const isIntersectSouceRect = isIntersected( intersectedInfo )
+
+    if ( ! isIntersectSouceRect ) {
+      return defaultCorner
+    }
+
+    if ( isIntersectSouceRect ) {
+      const nearestSourceBcs = getNearestSourceBcsOnSameHOrVRectBorder()
+      const center = getCenterPoint( targetLinkingPoint, nearestSourceBcs.point  )
+      const corner = getTurningCornerTowardsPoint(
+        targetToExtensionLine.points,
+        inputStart,
+        center
+      )
+      return corner
+    }
+
+
+  }
+
+
   function notIntersected( intersectedInfo ) {
     return !intersectedInfo.isInfinite && isEmpty( intersectedInfo.intersectd )
   }
@@ -597,6 +634,19 @@ export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
       bcs2.bci.cornerExtensions,
       isEqual
     )[ 0 ]
+  }
+
+  function getNearestSourceBcsOnSameHOrVRectBorder(  ) {
+    const sourceA = getSourceBcsOnSimilarRectBorder( targetLinkingSegment )
+    const sourceB = sourceA.oppositeBcs
+    if (
+      distance( targetLinkingPoint, sourceA.point ) <
+      distance( targetLinkingPoint, sourceB.point )
+    ) {
+      return sourceA
+    } else {
+      return sourceB
+    }
   }
 }
 
