@@ -99,6 +99,10 @@ export default class Node extends FlowChartParticle {
     return [ this.center, this.lbc, this.tbc, this.rbc, this.bbc ]
   }
 
+  get borderCenterLinkingSegments(): BorderCenterLinkingSegment[] {
+    return [ this.lbc, this.tbc, this.rbc, this.bbc ]
+  }
+
   isPointInNodeRect( point: Point2D ): boolean {
     const { center, x, y, width, height } = this
     return isPointInRect( point, center.point, x - width / 2, y - height / 2 )

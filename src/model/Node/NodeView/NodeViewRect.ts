@@ -3,8 +3,10 @@ import Flowchart from "../../../Flowchart"
 import Node from "../Node"
 import setNodeViewObjectCommonProps from "../../../ftUtil/node/nodeView/index"
 import { notNil, notUndefined } from "../../../../../Draw/src/util/lodash/index"
-import { getInitializeLinkViewOrthogonalLineCorners } from "../../../ftUtil/algorithm/orthogonalLine/index"
+import { getInitializeLinkViewOrthogonalLineCorners, getOrthogonalLineEndSegmentOnNode } from '../../../ftUtil/algorithm/orthogonalLine/index';
 import { SIMPLE_LINE, ORTHOGONAL_LINE } from '../../../constant/type/linkViewTypes';
+import OrthogonalLine from "../../../../../Draw/src/model/shape/OrthogonalLine/OrthogonalLine";
+import LinkViewOrthogonalLine from '../../Link/LinkViews/LinkViewOrthogonalLine';
 
 export default class NodeViewRect extends Rect {
   node: Node
@@ -37,7 +39,11 @@ export default class NodeViewRect extends Rect {
     super.updateDrag( event )
   }
 
-  handleDragging() {
+  handleDragging( event ) {
+    const point: Point2DInitial = this.getters.getInitialPoint( event )
+    const dx = this.dragger.getDeltaXToPrevPoint( point )
+    const dy = this.dragger.getDeltaYToPrevPoint( point )
+
     const { links } = this.node
     links.map( link => {
       const {
@@ -45,32 +51,24 @@ export default class NodeViewRect extends Rect {
         sourceLinkingSegment,
         target,
         targetLinkingSegment,
-        viewType
+        viewType,
+        view
       } = link
 
       if ( viewType === SIMPLE_LINE ) {
       }
 
       if ( viewType === ORTHOGONAL_LINE ) {
-        
-
-        const { view }: { view: any } = link
-
-        this.actions.REMOVE_ELEMENTS( [ view.startSegment, view.endSegment ] )
-
-        const corners = getInitializeLinkViewOrthogonalLineCorners(
-          source,
-          sourceLinkingSegment,
-          target,
-          targetLinkingSegment
-        )
-
-        view.reGenerate( [
-          link.sourceLinkingSegment.point,
-          ...corners,
-          link.targetLinkingSegment.point
-        ] )
+        const orthogonalLinkView: LinkViewOrthogonalLine = <any>view
+        orthogonalLinkView.reGenerate()
+        // const segment = getOrthogonalLineEndSegmentOnNode( orthogonalLinkView, this.node )
+        // if ( notNil( segment ) ) {
+        //   segment.translate( dx, dy )
+        //   orthogonalLinkView.refresh()
+        // } 
       }
     } )
+
+    
   }
 }

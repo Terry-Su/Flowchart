@@ -2,14 +2,15 @@ import OrthogonalLine from "../../../../../Draw/src/model/shape/OrthogonalLine/O
 import Node from '../../../model/Node/Node';
 import LinkingSegment from "../../../model/Node/LinkingSegments/LinkingSegment"
 import BorderCenterLinkingSegment from '../../../model/Node/LinkingSegments/BorderCenterLinkingSegment';
-import Link from "../../../model/Link/Link"
+import Link from '../../../model/Link/Link';
 import LinkViewOrthogonalLine from "../../../model/Link/LinkViews/LinkViewOrthogonalLine"
 import MathSegmentLine from "../../../../../Draw/src/util/math/MathSegmentLine"
 import { isSegmentLineIntersectRectAtOnlyOnePoint } from "../../geometry/index"
 import {
   firstElement,
   lastElement,
-  isEmpty
+  isEmpty,
+  findArrayFirstIndex
 } from "../../../../../Draw/src/util/js/array"
 import { notNil } from "../../../../../Draw/src/util/lodash/index"
 import CornerSegment from "../../../../../Draw/src/model/shape/OrthogonalLine/CornerSegment"
@@ -18,6 +19,7 @@ import { intersectionWith, isEqual, minBy, maxBy, uniqWith } from "lodash"
 import MiniMap from "../../../../../Draw/src/model/tool/MiniMap"
 import getCenterPoint from "../../../../../Draw/src/util/geometry/basic/getCenterPoint";
 import { equalPoint } from "../../../../../Draw/src/util/js/compare";
+import Segment from "../../../../../Draw/src/model/Segment";
 
 const { abs } = Math
 
@@ -700,20 +702,20 @@ export function getInitializeLinkViewOrthogonalLineCorners( source: Node, source
 
 
 
-// export default function connectOrthogonalLine(
-//   orthogonalLine,
-//   {
-//     sourceNode,
-//     sourcePoint,
-//     targetNode,
-//     targetPoint
-//   }: {
-//     sourceNode?: Node
-//     sourcePoint?: Point2D
-//     targetNode?: Node
-//     targetPoint: Point2D
-//   }
-// ) {
-//   orthogonalLine.translateTargetToPoint &&
-//     orthogonalLine.translateTargetToPoint( targetPoint )
-// }
+export function getOrthogonalLineEndSegmentOnNode( line: OrthogonalLine, node: Node ): Segment {
+  let res = null  
+  const { startSegment, endSegment } = line
+  const { borderCenterLinkingSegments } = node
+
+  borderCenterLinkingSegments.map( ( { point } ) => {
+    if ( equalPoint( startSegment.point, point ) ) {
+      res = startSegment
+    }
+
+    if ( equalPoint( endSegment.point, point ) ) {
+      res = endSegment
+    }
+  } )
+
+  return res
+}
