@@ -37,53 +37,31 @@ export default class NodeViewRect extends Rect {
   }
 
   handleDragging() {
-    // const { links } = this.node
-    // links.map( link => {
-    //   const {
-    //     source,
-    //     sourceLinkingSegment,
-    //     target,
-    //     targetLinkingSegment
-    //   } = link
+    const { links } = this.node
+    links.map( link => {
+      const {
+        source,
+        sourceLinkingSegment,
+        target,
+        targetLinkingSegment
+      } = link
 
-    //   const { view }: { view: any } = link
+      const { view }: { view: any } = link
 
-    //   this.actions.REMOVE_ELEMENTS( [ view.startSegment, view.endSegment ] )
+      this.actions.REMOVE_ELEMENTS( [ view.startSegment, view.endSegment ] )
 
-    //   const corners = getInitializeLinkViewOrthogonalLineCorners(
-    //     source,
-    //     sourceLinkingSegment,
-    //     target,
-    //     targetLinkingSegment
-    //   )
+      const corners = getInitializeLinkViewOrthogonalLineCorners(
+        source,
+        sourceLinkingSegment,
+        target,
+        targetLinkingSegment
+      )
 
-    //   // view.removeCornerSegments( view.cornerSegments )
-    //   // this.actions.REMOVE_ELEMENTS(view.cornerSegments )
-
-    //   view.reGenerate( [
-    //     link.sourceLinkingSegment.point,
-    //     ...corners,
-    //     link.targetLinkingSegment.point
-    //   ] )
-
-    //   // view.cornerSegments = corners.map( corner => view.createCornerSegment( corner ) )
-
-    //   // view.startSegment = view.createStartSegment( link.sourceLinkingSegment.point )
-    //   // view.endSegment = view.createEndSegment( link.targetLinkingSegment.point )
-
-    //   // view.refresh()
-
-    //   // this.node.ft.addLink( {
-    //   //   type: 'orthogonal',
-    //   //   source,
-    //   //   target,
-    //   // } )
-
-    //   // link.remove()
-
-    //   // link.drawGetters.testUtils.delayRenderPoints( corners, 'black' )
-
-    //   this.node.ft.render()
-    // } )
+      view.reGenerate( [
+        link.sourceLinkingSegment.point,
+        ...corners,
+        link.targetLinkingSegment.point
+      ] )
+    } )
   }
 }

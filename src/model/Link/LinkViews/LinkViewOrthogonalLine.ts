@@ -7,6 +7,7 @@ import OrthogonalLine from "../../../../../Draw/src/model/shape/OrthogonalLine/O
 import { notNil } from "../../../../../Draw/src/util/lodash/index"
 import { isNil } from 'lodash';
 import { getInitializeLinkViewOrthogonalLineCorners } from '../../../ftUtil/algorithm/orthogonalLine/index';
+import { notEqual } from "../../../../../Draw/src/util/js/compare";
 
 export default class LinkViewOrthogonalLine extends OrthogonalLine {
   link: Link
@@ -21,25 +22,29 @@ export default class LinkViewOrthogonalLine extends OrthogonalLine {
 
 
   handleStartSegmentStopDrag( event ) {
+    const { link } = this
+    const { target } = link
     const point: Point2D = this.getters.getInitialPoint( event )
     const coincidedInfo = this.link.ft.getters.getCoincidedInfoPointInNode( point )
     const { node: coincidedNode, linkingSegment } = coincidedInfo
 
-    if ( notNil( coincidedNode ) && notNil( linkingSegment ) ) {
-      this.link.updateSource( coincidedNode )
-      this.link.setSourceLinkingSegment( linkingSegment )
+    if ( notNil( coincidedNode ) && notEqual( coincidedNode, target ) && notNil( linkingSegment ) ) {
+      link.updateSource( coincidedNode )
+      link.setSourceLinkingSegment( linkingSegment )
       this.reGenerate()
     }
   }
 
   handleEndSegmentStopDrag( event ) {
+    const { link } = this
+    const { source } = link
     const point: Point2D = this.getters.getInitialPoint( event )
     const coincidedInfo = this.link.ft.getters.getCoincidedInfoPointInNode( point )
     const { node: coincidedNode, linkingSegment } = coincidedInfo
 
-    if ( notNil( coincidedNode ) && notNil( linkingSegment ) ) {
-      this.link.updateTarget( coincidedNode )
-      this.link.setTargetLinkingSegment( linkingSegment )
+    if ( notNil( coincidedNode ) && notEqual( coincidedNode, source ) && notNil( linkingSegment ) ) {
+      link.updateTarget( coincidedNode )
+      link.setTargetLinkingSegment( linkingSegment )
       this.reGenerate()
     }
   }

@@ -62,6 +62,8 @@ export default class Link extends FlowChartParticle {
     }
 
     this.setSource( node )
+    
+    this.source.addLink( this )
   }
 
   setTarget( target: Node ) {
@@ -75,6 +77,8 @@ export default class Link extends FlowChartParticle {
     }
 
     this.setTarget( node )
+
+    this.target.addLink( this )
   }
 
   /**
