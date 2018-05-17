@@ -4,6 +4,7 @@ import Node from "../Node"
 import setNodeViewObjectCommonProps from "../../../ftUtil/node/nodeView/index"
 import { notNil, notUndefined } from "../../../../../Draw/src/util/lodash/index"
 import { getInitializeLinkViewOrthogonalLineCorners } from "../../../ftUtil/algorithm/orthogonalLine/index"
+import { SIMPLE_LINE, ORTHOGONAL_LINE } from '../../../constant/type/linkViewTypes';
 
 export default class NodeViewRect extends Rect {
   node: Node
@@ -43,25 +44,33 @@ export default class NodeViewRect extends Rect {
         source,
         sourceLinkingSegment,
         target,
-        targetLinkingSegment
+        targetLinkingSegment,
+        viewType
       } = link
 
-      const { view }: { view: any } = link
+      if ( viewType === SIMPLE_LINE ) {
+      }
 
-      this.actions.REMOVE_ELEMENTS( [ view.startSegment, view.endSegment ] )
+      if ( viewType === ORTHOGONAL_LINE ) {
+        
 
-      const corners = getInitializeLinkViewOrthogonalLineCorners(
-        source,
-        sourceLinkingSegment,
-        target,
-        targetLinkingSegment
-      )
+        const { view }: { view: any } = link
 
-      view.reGenerate( [
-        link.sourceLinkingSegment.point,
-        ...corners,
-        link.targetLinkingSegment.point
-      ] )
+        this.actions.REMOVE_ELEMENTS( [ view.startSegment, view.endSegment ] )
+
+        const corners = getInitializeLinkViewOrthogonalLineCorners(
+          source,
+          sourceLinkingSegment,
+          target,
+          targetLinkingSegment
+        )
+
+        view.reGenerate( [
+          link.sourceLinkingSegment.point,
+          ...corners,
+          link.targetLinkingSegment.point
+        ] )
+      }
     } )
   }
 }
