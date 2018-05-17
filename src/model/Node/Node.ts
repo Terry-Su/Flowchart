@@ -152,6 +152,13 @@ export default class Node extends FlowChartParticle {
     return this.createBorderCenterLinkingSegment( { x, y: y + height / 2, mathRect,  getBci: (mathRect) => mathRect.bbci } )
   }
 
+  setX( value: number ) {
+    this.x = value
+  }
+
+  setY( value: number ) {
+    this.y = value
+  }
 
   translateLinkingSegments( dx: number, dy: number ) {
     this.draw.sharedActions.translateSegments( this.linkingSegments, dx, dy )
@@ -160,11 +167,14 @@ export default class Node extends FlowChartParticle {
   translateTo( x: number, y: number ) {
     const { view } = this
     notNil( view ) && view.translateTo( x, y )
+
+    this.setX( x )
+    this.setY( y )
   }
 
   translateByView( dx: number, dy: number ) {
-    this.x = this.x + dx
-    this.y = this.y + dx
+    this.setX( this.x + dx )
+    this.setY( this.y + dy)
     this.translateLinkingSegments( dx, dy )
     this.mathRect.translateCenter( dx, dy )
   }

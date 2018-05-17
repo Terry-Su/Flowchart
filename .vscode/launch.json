@@ -9,10 +9,11 @@
 			"request": "launch",
 			"name": "Launch Chrome ",
 			"port": 9222,
+			// "url": "http://localhost:9000/build/__test__/index/index.html",
 			// "url": "http://localhost:9000/build/__test__/Node/Basic/index.html",
 			// "url": "http://localhost:9000/build/__test__/Link/Basic/index.html",
-			"url": "http://localhost:9000/build/__test__/Link/Orthogonal/index.html",
-			// "url": "http://localhost:9000/build/__test__/Link/GenerateLinkByDraggingLinkingSegment/index.html",
+			// "url": "http://localhost:9000/build/__test__/Link/Orthogonal/index.html",
+			"url": "http://localhost:9000/build/__test__/Link/GenerateLinkByDraggingLinkingSegment/index.html",
 			"pathMapping": {
 				"/": "${workspaceFolder}"
 			},

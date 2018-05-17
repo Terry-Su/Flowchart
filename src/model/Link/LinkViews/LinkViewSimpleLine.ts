@@ -16,7 +16,7 @@ export default class LinkViewSimpleLine extends Line {
     setLinkViewObjectCommonProps( this, this.link )
 
     function setPropsDangerously( props: any ) {
-
+      props.draggable = false
       return props
     }
   }  
