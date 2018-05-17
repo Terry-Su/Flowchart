@@ -1,6 +1,6 @@
 import FlowChartParticle from "../FlowChartParticle"
 import { SIMPLE_LINE, ORTHOGONAL_LINE } from "../../constant/type/linkViewTypes"
-import { notUndefined } from "../../../../Draw/src/util/lodash/index"
+import { notUndefined, notNil } from "../../../../Draw/src/util/lodash/index"
 import { isNil } from "lodash"
 import linkViewObjectClassMap from "../../constant/map/linkViewObjectClassMap"
 import Node from "../Node/Node"
@@ -9,6 +9,7 @@ import Segment from "../../../../Draw/src/model/Segment"
 import LinkViewOrthogonalLine from "./LinkViews/LinkViewOrthogonalLine"
 import { createInitializeLinkViewOrthogonalLine } from "../../ftUtil/algorithm/orthogonalLine/index"
 import BorderCenterLinkingSegment from '../Node/LinkingSegments/BorderCenterLinkingSegment';
+import { removeElement } from "../../../../Draw/src/util/js/array";
 
 export default class Link extends FlowChartParticle {
   view: LinkView
@@ -28,6 +29,9 @@ export default class Link extends FlowChartParticle {
 
     notUndefined( props.source ) && this.setSource( props.source )
     notUndefined( props.target ) && this.setTarget( props.target )
+
+    this.source.addLink( this )
+    this.target.addLink( this )
 
     this.viewType = notUndefined( props.type ) ? props.type : this.viewType
 
@@ -49,12 +53,39 @@ export default class Link extends FlowChartParticle {
 
   setSource( source: Node ) {
     this.source = source
-    source.addLink( this )
+  }
+
+  updateSource( node: Node ) {
+    const { source } = this
+    if ( notNil( source) ) {
+      removeElement( source.links, this )
+    }
+
+    this.setSource( node )
   }
 
   setTarget( target: Node ) {
     this.target = target
-    target.addLink( this )
+  }
+
+  updateTarget( node: Node ) {
+    const { target } = this
+    if ( notNil( target) ) {
+      removeElement( target.links, this )
+    }
+
+    this.setTarget( node )
+  }
+
+  /**
+   * Border center linking segment
+   */
+  setSourceLinkingSegment( segment: BorderCenterLinkingSegment ) {
+    this.sourceLinkingSegment = segment
+  }
+
+  setTargetLinkingSegment( segment: BorderCenterLinkingSegment ) {
+    this.targetLinkingSegment = segment
   }
 
   createView( props: any = {} ): any {
