@@ -1,5 +1,5 @@
 import OrthogonalLine from "../../../../../Draw/src/model/shape/OrthogonalLine/OrthogonalLine"
-import Node from "../../../model/Node/Node"
+import Node from '../../../model/Node/Node';
 import LinkingSegment from "../../../model/Node/LinkingSegments/LinkingSegment"
 import BorderCenterLinkingSegment from '../../../model/Node/LinkingSegments/BorderCenterLinkingSegment';
 import Link from "../../../model/Link/Link"
@@ -23,9 +23,10 @@ const { abs } = Math
 
 export function createInitializeLinkViewOrthogonalLine( link: Link ) {
   const self = this
-  const { sourceLinkingSegment, targetLinkingSegment }: Link = link
 
-  const corners = getInitializeLinkViewOrthogonalLineCorners( link )
+  const { source, sourceLinkingSegment, target, targetLinkingSegment } = link
+
+  const corners = getInitializeLinkViewOrthogonalLineCorners( source, sourceLinkingSegment, target, targetLinkingSegment)
 
   const points = [
     sourceLinkingSegment.point,
@@ -35,10 +36,8 @@ export function createInitializeLinkViewOrthogonalLine( link: Link ) {
   return new LinkViewOrthogonalLine( { link, draw: link.draw, points } )
 }
 
-export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
+export function getInitializeLinkViewOrthogonalLineCorners( source: Node, sourceLinkingSegment: BorderCenterLinkingSegment, target: Node, targetLinkingSegment: BorderCenterLinkingSegment ) {
   const self = this
-  const { source, target }: Link = link
-  const { sourceLinkingSegment, targetLinkingSegment }: Link = link
 
   const { x: sx, y: sy } = sourceLinkingSegment
   const { x: tx, y: ty } = targetLinkingSegment
@@ -699,22 +698,22 @@ export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
   }
 }
 
-export default function connectOrthogonalLine(
-  orthogonalLine,
-  {
-    sourceNode,
-    sourcePoint,
-    targetNode,
-    targetPoint
-  }: {
-    sourceNode?: Node
-    sourcePoint?: Point2D
-    targetNode?: Node
-    targetPoint: Point2D
-  }
-) {
-  console.log( sourceNode, sourcePoint, targetNode, targetPoint )
 
-  orthogonalLine.translateTargetToPoint &&
-    orthogonalLine.translateTargetToPoint( targetPoint )
-}
+
+// export default function connectOrthogonalLine(
+//   orthogonalLine,
+//   {
+//     sourceNode,
+//     sourcePoint,
+//     targetNode,
+//     targetPoint
+//   }: {
+//     sourceNode?: Node
+//     sourcePoint?: Point2D
+//     targetNode?: Node
+//     targetPoint: Point2D
+//   }
+// ) {
+//   orthogonalLine.translateTargetToPoint &&
+//     orthogonalLine.translateTargetToPoint( targetPoint )
+// }

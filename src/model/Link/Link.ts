@@ -19,6 +19,10 @@ export default class Link extends FlowChartParticle {
 
   target: Node = null
 
+  sourceLinkingSegment: BorderCenterLinkingSegment = null
+
+  targetLinkingSegment: BorderCenterLinkingSegment = null
+
   constructor( props ) {
     super( props )
 
@@ -27,16 +31,19 @@ export default class Link extends FlowChartParticle {
 
     this.viewType = notUndefined( props.type ) ? props.type : this.viewType
 
+    this.sourceLinkingSegment = notUndefined( props.sourceLinkingSegment ) ? props.sourceLinkingSegment : this.defaultSourceLinkingSegment
+    this.targetLinkingSegment = notUndefined( props.targetLinkingSegment ) ? props.targetLinkingSegment : this.defaultTargetLinkingSegment
+
     this.view = this.createView( props )
 
     this.mutations.ADD_LINK( this )
   }
 
-  get sourceLinkingSegment(): BorderCenterLinkingSegment {
+  get defaultSourceLinkingSegment(): BorderCenterLinkingSegment {
     return this.source.rbc
   }
 
-  get targetLinkingSegment(): BorderCenterLinkingSegment {
+  get defaultTargetLinkingSegment(): BorderCenterLinkingSegment {
     return this.target.rbc
   }
 

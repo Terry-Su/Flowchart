@@ -39,7 +39,7 @@ export default abstract class LinkingSegment extends BasicSegment{
   handleDragging( event ) {
     const { node, tmpLine } = this
 
-    const source: Point2D = this.node.center.point
+    const source: Point2D = this.point
     const moving: Point2D = this.getters.getInitialPoint( event )
 
     if ( isNil( tmpLine ) ) {
@@ -50,7 +50,7 @@ export default abstract class LinkingSegment extends BasicSegment{
   handleStopDrag( event ) {
     this._removeTmpLine() 
     
-    super.handleStopDrag()
+    super.handleStopDrag()    
   }
 
 }
