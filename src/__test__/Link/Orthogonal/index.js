@@ -1,7 +1,7 @@
 const ft = new Flowchart( document.getElementById( "canvas" ) )
 
 const node1 = ft.addNode( {
-	x: 300,
+	x: 100,
 	y: 400,
 	label: '节点1',
 	fillColor: 'blue'

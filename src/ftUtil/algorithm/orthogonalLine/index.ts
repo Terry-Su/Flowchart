@@ -27,8 +27,6 @@ export function createInitializeLinkViewOrthogonalLine( link: Link ) {
 
   const corners = getInitializeLinkViewOrthogonalLineCorners( link )
 
-  link.drawGetters.testUtils.delayRenderPoints( corners, "black" )
-
   const points = [
     sourceLinkingSegment.point,
     ...corners,
@@ -117,10 +115,6 @@ export function getInitializeLinkViewOrthogonalLineCorners( link: Link ) {
       checkIntersectionThenConnectTargetLinking( line )
     }
   }
-
-  // link.draw.getters.testUtils.delayRenderPoints( corners, 'purple' )
-
-  // console.log( corners )
 
   corners = uniqWith( corners, isEqual )
 
